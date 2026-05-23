@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descubrí tu Arquetipo — Cony Fresh</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: #0d1209;
+            background-image:
+                radial-gradient(ellipse at 15% 10%, rgba(180, 140, 60, 0.07) 0%, transparent 55%),
+                radial-gradient(ellipse at 85% 90%, rgba(110, 55, 30, 0.10) 0%, transparent 55%),
+                url("data:image/svg+xml,%3Csvg width='400' height='400' viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.025'/%3E%3C/svg%3E");
+            color: #f0e8d8;
+            font-family: 'EB Garamond', serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 52px 28px 80px;
+            position: relative;
+        }
+
+        /* ── SCREENS ── */
+        .screen { display: none; }
+        .screen.active { display: block; }
+
+        /* ── INTRO ── */
+        #intro-screen { text-align: center; padding-top: 48px; }
+
+        .brand-tag {
+            font-size: 11px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: #c4955a;
+            margin-bottom: 36px;
+            display: block;
+        }
+
+        .moon-svg {
+            display: block;
+            margin: 0 auto 32px;
+            opacity: 0.90;
+        }
+
+        .intro-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(38px, 9vw, 62px);
+            font-weight: 300;
+            line-height: 1.12;
+            color: #f0e8d8;
+            margin-bottom: 6px;
+        }
+
+        .intro-subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(20px, 4.5vw, 28px);
+            font-style: italic;
+            font-weight: 300;
+            color: #c4955a;
+            margin-bottom: 44px;
+        }
+
+        .divider {
+            width: 100px;
+            height: 1px;
+            background: linear-gradient(to right, transparent, #c4955a 50%, transparent);
+            margin: 28px auto;
+        }
+
+        .ornament {
+            display: block;
+            text-align: center;
+            color: rgba(196, 149, 90, 0.45);
+            font-size: 18px;
+            letter-spacing: 10px;
+            margin: 16px 0;
+        }
+
+        .intro-body {
+            font-size: 18px;
+            line-height: 1.95;
+            color: #cfc4ae;
+            max-width: 500px;
+            margin: 0 auto 52px;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            padding: 17px 52px;
+            border: 1px solid #c4955a;
+            color: #c4955a;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 17px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            cursor: pointer;
+            background: transparent;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(196, 149, 90, 0.10);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .btn-primary:hover::after { opacity: 1; }
+        .btn-primary:hover { color: #f0e8d8; border-color: rgba(240, 232, 216, 0.7); }
+
+        /* ── QUESTION SCREEN ── */
+        .progress-wrapper { margin-bottom: 48px; }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .progress-label span {
+            font-size: 11px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(196, 149, 90, 0.6);
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 1px;
+            background: rgba(196, 149, 90, 0.18);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, #c4955a, #e0c07a);
+            transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .question-area { text-align: center; margin-bottom: 44px; }
+
+        .q-number {
+            font-size: 11px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: rgba(196, 149, 90, 0.5);
+            margin-bottom: 22px;
+        }
+
+        .q-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(23px, 5vw, 34px);
+            font-weight: 400;
+            line-height: 1.42;
+            color: #f0e8d8;
+        }
+
+        .options-grid { display: grid; gap: 12px; }
+
+        .opt-btn {
+            width: 100%;
+            padding: 20px 28px 20px 44px;
+            border: 1px solid rgba(196, 149, 90, 0.22);
+            background: rgba(196, 149, 90, 0.03);
+            color: #cfc4ae;
+            font-family: 'EB Garamond', serif;
+            font-size: 17px;
+            line-height: 1.65;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.30s ease;
+            position: relative;
+        }
+
+        .opt-btn::before {
+            content: '✦';
+            position: absolute;
+            left: -16px;
+            top: 22px;
+            color: #c4955a;
+            font-size: 11px;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .opt-btn:hover,
+        .opt-btn.selected {
+            border-color: rgba(196, 149, 90, 0.65);
+            background: rgba(196, 149, 90, 0.09);
+            color: #f0e8d8;
+            padding-left: 52px;
+        }
+
+        .opt-btn:hover::before,
+        .opt-btn.selected::before {
+            left: 20px;
+            opacity: 1;
+        }
+
+        .opt-btn.selected {
+            border-color: #c4955a;
+            background: rgba(196, 149, 90, 0.13);
+        }
+
+        /* ── RESULT SCREEN ── */
+        #result-screen { text-align: center; }
+
+        .result-tag {
+            font-size: 11px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: rgba(196, 149, 90, 0.7);
+            margin-bottom: 18px;
+        }
+
+        .result-ornament-big {
+            font-size: 52px;
+            display: block;
+            margin: 0 auto 16px;
+            line-height: 1;
+        }
+
+        .result-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(46px, 11vw, 76px);
+            font-weight: 300;
+            color: #f0e8d8;
+            line-height: 1.0;
+            margin-bottom: 12px;
+        }
+
+        .result-quote-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(18px, 4vw, 24px);
+            font-style: italic;
+            color: #c4955a;
+            margin-bottom: 36px;
+        }
+
+        .result-card {
+            border: 1px solid rgba(196, 149, 90, 0.28);
+            background: rgba(196, 149, 90, 0.045);
+            padding: 40px 36px;
+            text-align: left;
+            margin-bottom: 44px;
+        }
+
+        .result-card p {
+            font-size: 18px;
+            line-height: 1.95;
+            color: #cfc4ae;
+            margin-bottom: 18px;
+        }
+
+        .result-card p:last-child { margin-bottom: 0; }
+
+        .result-card em {
+            color: #c4955a;
+            font-style: italic;
+        }
+
+        .result-cta-label {
+            font-size: 16px;
+            font-style: italic;
+            color: #a8998a;
+            margin-bottom: 28px;
+            line-height: 1.7;
+        }
+
+        .btn-cta-main {
+            display: inline-block;
+            padding: 18px 52px;
+            border: 1px solid #c4955a;
+            color: #c4955a;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 17px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-decoration: none;
+            background: transparent;
+            transition: all 0.4s ease;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .btn-cta-main:hover {
+            background: rgba(196, 149, 90, 0.12);
+            color: #f0e8d8;
+        }
+
+        .btn-retake {
+            display: block;
+            padding: 14px 36px;
+            border: 1px solid rgba(196, 149, 90, 0.28);
+            color: rgba(196, 149, 90, 0.55);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 15px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            background: transparent;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .btn-retake:hover {
+            border-color: #c4955a;
+            color: #c4955a;
+        }
+
+        /* ── FOOTER ── */
+        .footer {
+            margin-top: 60px;
+            padding-top: 28px;
+            border-top: 1px solid rgba(196, 149, 90, 0.13);
+            text-align: center;
+            font-size: 11px;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: rgba(196, 149, 90, 0.38);
+        }
+
+        /* ── ANIMATIONS ── */
+        .fade-up {
+            animation: fadeUp 0.55s ease both;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(22px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 480px) {
+            .container { padding: 36px 18px 64px; }
+            .result-card { padding: 28px 20px; }
+            .opt-btn { padding: 18px 22px 18px 38px; font-size: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- ══ INTRO ══ -->
+    <div id="intro-screen" class="screen active fade-up">
+
+        <span class="brand-tag">Cony Fresh</span>
+
+        <!-- Luna SVG decorativa -->
+        <svg class="moon-svg" width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="36" cy="36" r="28" stroke="#c4955a" stroke-width="0.8" stroke-dasharray="3 4" opacity="0.5"/>
+            <path d="M44 22C37 23 30 29 30 36C30 43 36 49 44 50C37 52 28 48 25 41C22 34 25 26 32 22C36 20 41 20 44 22Z" fill="#c4955a" opacity="0.55"/>
+            <circle cx="50" cy="20" r="1.2" fill="#c4955a" opacity="0.4"/>
+            <circle cx="22" cy="50" r="0.9" fill="#c4955a" opacity="0.35"/>
+            <circle cx="58" cy="44" r="0.7" fill="#c4955a" opacity="0.3"/>
+            <circle cx="18" cy="28" r="1.1" fill="#c4955a" opacity="0.3"/>
+        </svg>
+
+        <h1 class="intro-title">Los 9 Arquetipos</h1>
+        <p class="intro-subtitle">Femeninos con Alma</p>
+
+        <div class="divider"></div>
+        <span class="ornament">✦ ❧ ✦</span>
+
+        <p class="intro-body">
+            Esta no es una prueba para etiquetarte.<br>
+            Es un espejo.<br><br>
+            Respondé desde lo que sentís hoy,<br>
+            no desde lo que creés que deberías ser.<br><br>
+            No hay respuestas correctas.<br>
+            Solo hay respuestas verdaderas.
+        </p>
+
+        <button class="btn-primary" onclick="startQuiz()">Comenzar el viaje</button>
+
+        <div class="footer">Cony Fresh &nbsp;✦&nbsp; @womenco.es</div>
+    </div>
+
+    <!-- ══ PREGUNTAS ══ -->
+    <div id="question-screen" class="screen">
+        <div class="progress-wrapper">
+            <div class="progress-label">
+                <span>Tu camino</span>
+                <span id="progress-count">1 / 9</span>
+            </div>
+            <div class="progress-track">
+                <div class="progress-bar" id="progress-bar" style="width:0%"></div>
+            </div>
+        </div>
+
+        <div class="question-area">
+            <p class="q-number" id="q-number">Pregunta 1 de 9</p>
+            <div class="divider"></div>
+            <h2 class="q-text" id="q-text"></h2>
+        </div>
+
+        <div class="options-grid" id="options-grid"></div>
+
+        <div class="footer" style="margin-top:52px;">Cony Fresh &nbsp;✦&nbsp; @cony.paoloni</div>
+    </div>
+
+    <!-- ══ RESULTADO ══ -->
+    <div id="result-screen" class="screen">
+        <p class="result-tag">Tu arquetipo es</p>
+        <span class="result-ornament-big" id="result-ornament">🌙</span>
+        <h2 class="result-name" id="result-name"></h2>
+        <p class="result-quote-text" id="result-quote"></p>
+
+        <div class="divider"></div>
+        <span class="ornament">✦ ❧ ✦</span>
+        <div class="divider"></div>
+
+        <div class="result-card">
+            <div id="result-body"></div>
+        </div>
+
+        <div>
+            <p class="result-cta-label">
+                ¿Querés conocer los 9 arquetipos en profundidad<br>
+                y entender qué dice el tuyo sobre este momento de tu vida?
+            </p>
+            <a href="https://conypaoloni-sketch.github.io/women-co/" target="_blank" class="btn-cta-main">
+                Entra a mi canal
+            </a>
+            <button class="btn-retake" onclick="resetQuiz()">Volver a empezar ↺</button>
+        </div>
+
+        <div class="footer" style="margin-top:52px;">
+            @cony.paoloni &nbsp;✦&nbsp; Cony Fresh &nbsp;✦&nbsp; @womenco.es
+        </div>
+    </div>
+
+</div>
+
+<script>
+/* ═══════════════════════════════════
+   DATOS
+═══════════════════════════════════ */
+const questions = [
+    {
+        text: "Cuando alguien que amás está sufriendo, vos...",
+        options: [
+            { text: "Entrás en acción: organizás, resolvés, hacés todo lo que podés para que esté bien.", arc: "GUARDIANA" },
+            { text: "Te sentás a su lado, escuchás y contenés sin juzgar ni apurarte.", arc: "SANADORA" },
+            { text: "Le decís la verdad aunque duela, aunque no sea lo que quiere escuchar.", arc: "SALVAJE" },
+            { text: "Lo sentís antes de que te lo cuente. Tu cuerpo ya sabe lo que está pasando.", arc: "MEIGA" }
+        ]
+    },
+    {
+        text: "Tu relación con los cambios en tu vida es...",
+        options: [
+            { text: "Los afrontás aunque estés agotada. Siempre encontrás cómo seguir adelante.", arc: "GUERRERA" },
+            { text: "Te generan ansiedad: querés tener todo resuelto antes de poder vivirlos.", arc: "VISIONARIA" },
+            { text: "Los abrazás porque sabés que cada caída te transformó en alguien más real.", arc: "ALQUIMISTA" },
+            { text: "Ya no corrés detrás de nada que no te elija. Aprendiste a elegirte.", arc: "REINA" }
+        ]
+    },
+    {
+        text: "Lo que más te define en este momento de tu vida es...",
+        options: [
+            { text: "Tu capacidad de ver belleza donde nadie más la ve.", arc: "MUSA" },
+            { text: "Tu sensibilidad para acompañar a otros desde el alma.", arc: "SANADORA" },
+            { text: "Tu fuerza para seguir aunque nadie vea todo lo que cargás.", arc: "GUERRERA" },
+            { text: "Tu visión de algo más grande que todavía estás construyendo.", arc: "VISIONARIA" }
+        ]
+    },
+    {
+        text: "¿Qué es lo que más necesitás hoy?",
+        options: [
+            { text: "Que alguien te cuide a vos, por una vez.", arc: "GUARDIANA" },
+            { text: "Permiso para ser exactamente como sos sin pedir disculpas.", arc: "SALVAJE" },
+            { text: "Soltar una versión de vos que ya no te representa.", arc: "ALQUIMISTA" },
+            { text: "Recordar que ya sos suficiente, sin tener que demostrarlo.", arc: "REINA" }
+        ]
+    },
+    {
+        text: "¿Cómo te conectás con tu mundo interior?",
+        options: [
+            { text: "A través de rituales, la luna, la naturaleza y tu intuición.", arc: "MEIGA" },
+            { text: "Creando, observando, transformando momentos cotidianos en algo especial.", arc: "MUSA" },
+            { text: "Sanando tus propias heridas mientras acompañás las de los demás.", arc: "SANADORA" },
+            { text: "Resistiendo, aprendiendo y volviéndote más fuerte con cada golpe.", arc: "GUERRERA" }
+        ]
+    },
+    {
+        text: "¿Qué frase resuena más con vos ahora mismo?",
+        options: [
+            { text: "\"Sé que hay algo más esperándome. Solo necesito aprender a confiar.\"", arc: "VISIONARIA" },
+            { text: "\"Cada crisis me dejó algo que no hubiera aprendido de otra manera.\"", arc: "ALQUIMISTA" },
+            { text: "\"Ya no negocio mi valor. O me tratan bien o me voy.\"", arc: "REINA" },
+            { text: "\"Si no lo hago yo, no lo hace nadie.\"", arc: "GUARDIANA" }
+        ]
+    },
+    {
+        text: "¿Qué parte de vos estás redescubriendo?",
+        options: [
+            { text: "Tu instinto, tu cuerpo, tu deseo de vivir sin pedir permiso.", arc: "SALVAJE" },
+            { text: "Tu capacidad de sentir lo que los demás no ven ni escuchan.", arc: "MEIGA" },
+            { text: "Tu voz creativa, tu forma única de expresarte.", arc: "MUSA" },
+            { text: "Tu capacidad de dar sin perderte a vos misma en el proceso.", arc: "SANADORA" }
+        ]
+    },
+    {
+        text: "¿Cuál es tu mayor desafío interno hoy?",
+        options: [
+            { text: "Aprender a descansar, a pedir ayuda, a bajar la armadura.", arc: "GUERRERA" },
+            { text: "Dejar de buscar validación externa para sentirte valiosa.", arc: "REINA" },
+            { text: "Dejar de luchar contra tus ciclos y empezar a honrarlos.", arc: "ALQUIMISTA" },
+            { text: "Dejar de querer tenerlo todo resuelto antes de dar el primer paso.", arc: "VISIONARIA" }
+        ]
+    },
+    {
+        text: "¿Qué tipo de mujer sentís que estás siendo en esta etapa?",
+        options: [
+            { text: "La que sostiene, protege y cuida aunque no siempre la vean.", arc: "GUARDIANA" },
+            { text: "La que ya no se conforma y eligió su libertad por encima de todo.", arc: "SALVAJE" },
+            { text: "La que siente todo, que vive entre lo visible y lo invisible.", arc: "MEIGA" },
+            { text: "La que inspira sin proponérselo, que convierte lo simple en magia.", arc: "MUSA" }
+        ]
+    }
+];
+
+const archetypes = {
+    GUARDIANA: {
+        name: "La Guardiana",
+        quote: "«Protege lo que ama con ferocidad.»",
+        ornament: "🌿",
+        body: `
+            <p>No naciste fuerte. Te volviste fuerte cuando entendiste que si vos no sostenías todo… nadie lo hacía.</p>
+            <p>Aprendiste a cuidar, a resolver, a prever problemas antes de que aparezcan. Y aunque muchas veces te ven calma, por dentro vivís alerta. Como si descansar fuera peligroso.</p>
+            <p>La Guardiana ama profundamente. Pero le cuesta mostrarse vulnerable porque aprendió que abrirse podía doler.</p>
+            <p><em>No necesitás ser más fuerte. Necesitás sentir que también podés apoyarte en alguien.</em></p>
+        `
+    },
+    SALVAJE: {
+        name: "La Salvaje",
+        quote: "«Es instinto, fuego y libertad.»",
+        ornament: "🔥",
+        body: `
+            <p>Tu Salvaje apareció cuando dejaste de pedir permiso. Cuando te cansaste de encajar. Cuando ya no podías seguir siendo la versión correcta para todos.</p>
+            <p>Sos cuerpo. Deseo. Verdad. A veces nace después de una ruptura; otras, después de años de silencio.</p>
+            <p>No querés destruirlo todo. Solo querés volver a sentirte viva.</p>
+            <p><em>Detrás de tu fuego hay una mujer que por fin decidió dejar de apagarse.</em></p>
+        `
+    },
+    VISIONARIA: {
+        name: "La Visionaria",
+        quote: "«Ve más allá de lo visible.»",
+        ornament: "✨",
+        body: `
+            <p>Siempre sentiste que había algo más. Más vida. Más propósito. Más verdad.</p>
+            <p>Tu mente nunca descansa del todo porque constantemente imaginás futuros posibles. Naciste para crear, transformar y abrir caminos.</p>
+            <p>Pero a veces te perdés en la ansiedad de querer tener todo resuelto antes de vivirlo.</p>
+            <p><em>Tu gran aprendizaje no es pensar más. Es confiar.</em></p>
+        `
+    },
+    MEIGA: {
+        name: "La Meiga",
+        quote: "«Conecta con lo invisible.»",
+        ornament: "🌙",
+        body: `
+            <p>Hay cosas que sentís aunque no puedas explicarlas. Energías. Cambios. Personas. Ambientes.</p>
+            <p>Sos profundamente intuitiva. Conectás con los símbolos, los rituales y los ciclos de la vida. Muchas veces te sentiste distinta, más sensible que el resto.</p>
+            <p>Y durante años quizás intentaste racionalizar lo que en realidad solo necesitaba ser escuchado.</p>
+            <p><em>Tu don no está en saberlo todo. Está en sentirlo.</em></p>
+        `
+    },
+    SANADORA: {
+        name: "La Sanadora",
+        quote: "«Transforma dolor en medicina.»",
+        ornament: "🌸",
+        body: `
+            <p>Sabés acompañar porque conocés el dolor. Escuchás. Contenés. Abrazás emocionalmente.</p>
+            <p>Muchas veces te convertiste en refugio para otros mientras te olvidabas de vos misma. Tenés una sensibilidad inmensa. Pero también el peligro de querer salvar a todos.</p>
+            <p>Y llega un momento donde entendés algo importante:</p>
+            <p><em>No viniste a sacrificarte. Viniste a sanar también tu propia historia.</em></p>
+        `
+    },
+    REINA: {
+        name: "La Reina",
+        quote: "«Conoce su valor.»",
+        ornament: "👑",
+        body: `
+            <p>Llegaste al punto donde dejaste de mendigar amor, atención o validación. Ya no corrés detrás. Ya no te conformás con migajas. Aprendiste a elegirte.</p>
+            <p>No necesitás demostrar constantemente quién sos porque finalmente entendiste tu valor.</p>
+            <p>Pero incluso la Reina tiene una herida: el miedo a mostrarse demasiado humana.</p>
+            <p><em>Tu verdadero poder no está en parecer perfecta. Está en sentirte suficiente.</em></p>
+        `
+    },
+    GUERRERA: {
+        name: "La Guerrera",
+        quote: "«Aprendió a sobrevivir.»",
+        ornament: "⚔️",
+        body: `
+            <p>Resolvés incluso cuando estás agotada. Seguís adelante aunque tengas miedo. Aunque nadie vea todo lo que cargás por dentro.</p>
+            <p>Sos la mujer que aprendió a sostenerse sola. Y aunque eso te volvió fuerte, también te acostumbró a vivir en tensión.</p>
+            <p>A veces no sabés descansar. No sabés pedir ayuda. No sabés bajar la armadura.</p>
+            <p><em>Porque durante mucho tiempo sobrevivir fue más importante que sentir.</em></p>
+        `
+    },
+    MUSA: {
+        name: "La Musa",
+        quote: "«Convierte lo cotidiano en belleza.»",
+        ornament: "🎨",
+        body: `
+            <p>Tenés el don de inspirar. Transformás pequeños momentos en algo especial. Percibís belleza donde otros no la ven.</p>
+            <p>Sos sensibilidad. Arte. Emoción. Pero muchas veces aprendiste a sentirte valiosa solo cuando eras admirada. Y ahí empieza la desconexión.</p>
+            <p><em>La verdadera Musa no vive para gustar. Vive para expresarse.</em></p>
+        `
+    },
+    ALQUIMISTA: {
+        name: "La Alquimista",
+        quote: "«Convierte crisis en transformación.»",
+        ornament: "🔮",
+        body: `
+            <p>Ya no querés volver a ser quien eras antes. Porque entendiste que cada caída te transformó.</p>
+            <p>Ya atravesaste versiones de vos misma que creíste eternas. Y sobreviviste a todas. Sos la mujer que dejó de luchar contra sus cambios y empezó a honrar sus ciclos.</p>
+            <p>No buscás perfección. Buscás verdad.</p>
+            <p><em>Y quizás ahí esté la verdadera transformación.</em></p>
+        `
+    }
+};
+
+/* ═══════════════════════════════════
+   ESTADO
+═══════════════════════════════════ */
+let current = 0;
+let scores = {};
+Object.keys(archetypes).forEach(k => scores[k] = 0);
+
+/* ═══════════════════════════════════
+   FUNCIONES
+═══════════════════════════════════ */
+function startQuiz() {
+    show('question-screen');
+    render(0);
+}
+
+function render(idx) {
+    current = idx;
+    const q = questions[idx];
+    const total = questions.length;
+
+    document.getElementById('q-number').textContent = `Pregunta ${idx + 1} de ${total}`;
+    document.getElementById('q-text').textContent = q.text;
+    document.getElementById('progress-bar').style.width = `${(idx / total) * 100}%`;
+    document.getElementById('progress-count').textContent = `${idx + 1} / ${total}`;
+
+    const grid = document.getElementById('options-grid');
+    grid.innerHTML = '';
+    grid.classList.remove('fade-up');
+    void grid.offsetWidth;
+    grid.classList.add('fade-up');
+
+    // Mezclar opciones
+    const opts = [...q.options].sort(() => Math.random() - 0.5);
+    opts.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'opt-btn';
+        btn.textContent = opt.text;
+        btn.onclick = () => pick(opt.arc, btn);
+        grid.appendChild(btn);
+    });
+}
+
+function pick(arc, btn) {
+    document.querySelectorAll('.opt-btn').forEach(b => b.disabled = true);
+    btn.classList.add('selected');
+    scores[arc]++;
+
+    setTimeout(() => {
+        current++;
+        if (current < questions.length) {
+            render(current);
+        } else {
+            showResult();
+        }
+    }, 480);
+}
+
+function showResult() {
+    // Actualizar barra al 100 %
+    document.getElementById('progress-bar').style.width = '100%';
+
+    // Ganador
+    let winner = Object.entries(scores).reduce((a, b) => b[1] > a[1] ? b : a)[0];
+    const arch = archetypes[winner];
+
+    document.getElementById('result-ornament').textContent = arch.ornament;
+    document.getElementById('result-name').textContent = arch.name;
+    document.getElementById('result-quote').textContent = arch.quote;
+    document.getElementById('result-body').innerHTML = arch.body;
+
+    show('result-screen');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function resetQuiz() {
+    current = 0;
+    Object.keys(scores).forEach(k => scores[k] = 0);
+    show('intro-screen');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function show(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    const el = document.getElementById(id);
+    el.classList.add('active');
+    el.classList.remove('fade-up');
+    void el.offsetWidth;
+    el.classList.add('fade-up');
+}
+</script>
+
+</body>
+</html>
+              
